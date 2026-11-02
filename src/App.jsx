@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ListIcon, XIcon, CircleIcon } from '@phosphor-icons/react';
 import '@fontsource-variable/onest';
 import { development, creative } from './data';
+import { CasePage, PortfolioCard } from './CasePage';
 import { Arrow, asset, BotDemo, Contact, Lightbox, Media, Scramble, ServiceSelector } from './components';
 
 export function App() {
@@ -12,14 +13,14 @@ export function App() {
   const [telegramNotice, setTelegramNotice] = useState(false);
   const [contactRequest, setContactRequest] = useState(0);
   const nameRef = useRef(null);
-  const page = path === '/development' ? 'development' : path === '/creative' ? 'creative' : 'home';
+  const page = path.replace(/\/$/, '') === '/projects/ryadom' ? 'ryadom' : path === '/development' ? 'development' : path === '/creative' ? 'creative' : 'home';
   useEffect(() => {
     const pop = () => { setPath(window.location.pathname); setSelected(null); setMedia(null); setMenu(false); };
     window.addEventListener('popstate', pop);
     return () => window.removeEventListener('popstate', pop);
   }, []);
   useEffect(() => {
-    document.title = page === 'home' ? 'NOVARY — идеи в дело' : page === 'development' ? 'Разработка — NOVARY' : 'Дизайн и креативы — NOVARY';
+    document.title = page === 'ryadom' ? 'Рядом — кейс NOVARY' : page === 'home' ? 'NOVARY — идеи в дело' : page === 'development' ? 'Разработка — NOVARY' : 'Дизайн и креативы — NOVARY';
   }, [page]);
   function navigate(url) {
     const [next, hash] = url.split('#');
@@ -56,7 +57,7 @@ export function App() {
       <button className="icon-button mobile-menu" aria-label={menu ? 'Закрыть меню' : 'Открыть меню'} aria-expanded={menu} onClick={() => setMenu(v => !v)}>{menu ? <XIcon /> : <ListIcon />}</button>
     </header>
     <main id="main">
-      {page === 'home' ? <Home key="page-home" navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} /> : <ServicePage key={'page-' + page} page={page} navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} />}
+      {page === 'home' ? <Home key="page-home" navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} /> : page === 'ryadom' ? <CasePage back={link('/#concepts')} onMedia={setMedia} /> : <ServicePage key={'page-' + page} page={page} navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} />}
       <Contact key={'contact-' + page} selected={selected} setSelected={setSelected} telegramNotice={telegramNotice} clearTelegram={() => setTelegramNotice(false)} nameRef={nameRef} requestId={contactRequest} title={page === 'home' ? 'project' : 'task'} onTelegram={telegram} />
     </main>
     <footer className="site-footer container"><a href="/" onClick={link('/')} className="wordmark">NOVARY</a><p>Разработка · Дизайн · AI-креативы</p><small>© 2026 NOVARY</small><button onClick={telegram} className="text-link">Написать в Telegram<Arrow diagonal /></button></footer>
@@ -86,12 +87,7 @@ function Home({ navigate, contact, telegram, onMedia }) {
     </section>
     <section className="home-concept container" id="concepts">
       <div className="concept-heading"><h2>Одна идея.<br />Три воплощения.</h2><p>Изображение, сайт и рекламный креатив<br />в едином стиле.</p></div>
-      <div className="home-collage">
-        <Media name="coffee-photo.png" alt="Оранжевый кофейный пакет и чашка — концепт" className="coffee-photo" onOpen={onMedia} caption="Изображение" />
-        <span className="concept-tag coffee-tag">КОНЦЕПТ</span>
-        <Media name="coffee-landing.png" alt="Лендинг кофейни — концепт" className="coffee-site" onOpen={onMedia} caption="Сайт" />
-        <Media name="coffee-poster-tall.png" alt="Рекламный постер кофейни — концепт" className="coffee-poster" onOpen={onMedia} caption="Креатив" />
-      </div>
+      <PortfolioCard onNavigate={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && event.button === 0) { event.preventDefault(); navigate('/projects/ryadom'); } }} />
     </section>
     <section className="manifesto" id="approach"><div className="container"><div className="manifesto-grid"><h2><Scramble text="Ясно." /><Scramble text="Смело." /><Scramble text="По делу." /></h2><div className="principles"><button><Scramble text="Понятный процесс" /></button><button><Scramble text="Цельный визуальный стиль" /></button><button><Scramble text="Технологии под задачу" /></button></div></div><p>Сначала задача. Затем решение.</p></div></section>
     <section className="process container" aria-label="Этапы работы">{[['Обсуждаем задачу', 'Погружаемся в ваш бизнес и цели.'], ['Согласуем решение', 'Предлагаем подход и план работ.'], ['Создаём', 'Разрабатываем, рисуем, генерируем, собираем.'], ['Передаём результат', 'Вы получаете готовый проект и все материалы.']].map(([title, text], i) => <div key={title}><span className="step-number">0{i + 1}</span><h3>{title}</h3><p>{text}</p></div>)}</section>

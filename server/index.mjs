@@ -14,7 +14,10 @@ createServer((req, res) => api(req, res, async () => {
     const pathname = decodeURIComponent(new URL(req.url, 'http://localhost').pathname);
     let file = path.resolve(root, '.' + pathname);
     if ((file !== root && !file.startsWith(root + path.sep)) || pathname.split('/').some(segment => segment.startsWith('.'))) { res.writeHead(404).end(); return; }
-    try { if (!(await stat(file)).isFile()) throw new Error(); }
+    try {
+      if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
+      if (!(await stat(file)).isFile()) throw new Error();
+    }
     catch { if (!req.headers.accept?.includes('text/html')) { res.writeHead(404).end(); return; } file = path.join(root, 'index.html'); }
     res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
     if (req.method === 'HEAD') res.end(); else createReadStream(file).on('error', () => res.destroy()).pipe(res);

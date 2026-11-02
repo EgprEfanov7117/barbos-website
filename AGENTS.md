@@ -7,3 +7,5 @@ Production is Cloudflare Pages, main branch, npm run build:cloudflare, dist/clie
 Credentials belong only in local ignored configuration or Cloudflare secret bindings. Never commit .env.local, tokens, app passwords, private notification destinations, logs, or local work files. Use .env.example for empty settings.
 
 Checks: npm run test:leads, npm run test:cloudflare, npm run test:sites, npm run build. Keep the rollback tag novary-before-refresh-20261102.
+
+Portfolio 2026-11-03: user approved and explicitly requested publication of the Ryadom case. App routes now include /projects/ryadom, with a portfolio card on /#concepts. Functional cafe demonstration is bundled at /demos/ryadom/; ?bot=1 opens its scripted local demo. Preserve approved editorial layout and six original campaign PNGs. Cafe and its marketing are concepts, with no real orders or deployed cafe Telegram claims. Build generates public/demos/ryadom from versioned demos/ryadom sources before building the main app. Keep generated public/demos output ignored.
