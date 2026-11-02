@@ -1,0 +1,15 @@
+{
+  "name": "novary",
+  "pages_build_output_dir": "dist/client",
+  "compatibility_date": "2026-11-02",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "LEADS_DB",
+      "database_name": "novary-site-leads",
+      "database_id": "b4f3193e-2460-4ee0-b588-aba452b6eade"
+    }
+  ]
+}

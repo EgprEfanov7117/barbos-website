@@ -1,0 +1,9 @@
+/services.html /development 301
+/services /development 301
+/projects.html /#concepts 301
+/projects /#concepts 301
+/about.html /#approach 301
+/about /#approach 301
+/contact.html /#contact 301
+/contact /#contact 301
+/projects/* /#concepts 301
