@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { getSmtpSocket } from './smtp-socket.mjs';
 import { validateLead, formatLead } from '../server/leads.mjs';
 import { createNotifications } from '../server/notifications.mjs';
 
@@ -6,7 +7,9 @@ const json = (status, body) => new Response(JSON.stringify(body), { status, head
 const error = (status, message) => json(status, { ok: false, message });
 const digest = value => createHash('sha256').update(value).digest('hex');
 
-export async function handleCloudflareLead(request, env, context, notifications = createNotifications(env)) {
+export async function handleCloudflareLead(request, env, context, notifications = createNotifications(env, {
+  getSocket: getSmtpSocket,
+})) {
   if (request.method !== 'POST') return error(405, 'Метод не поддерживается.');
   const url = new URL(request.url);
   const trustedHost = url.hostname === 'novary.pages.dev' || url.hostname.endsWith('.novary.pages.dev') || ['localhost', '127.0.0.1'].includes(url.hostname);
@@ -65,6 +68,9 @@ export async function handleCloudflareLead(request, env, context, notifications 
           channel,
           code: /^[A-Z_0-9]+$/.test(reason?.code || '') ? reason.code : 'UNKNOWN',
           smtpStatus: Number(reason?.responseCode) || null,
+          phase: /^[A-Z ]+$/.test(reason?.command || '') ? reason.command : null,
+          detail: ['proxy request failed', 'network connection lost', 'TLS', 'certificate', 'socket', 'closed', 'connect', 'timeout', 'SNI', 'IP address', 'not implemented', 'unsupported']
+            .filter(term => String(reason?.message || '').toLowerCase().includes(term.toLowerCase())),
           category: /spam|suspicious|policy/i.test(reason?.response || '') ? 'policy'
             : /authentication|credentials|authorization/i.test(reason?.response || '') ? 'auth' : 'other',
         }));
