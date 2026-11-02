@@ -55,8 +55,20 @@ export async function handleCloudflareLead(request, env, context, notifications 
     locked = true;
     const text = formatLead(lead);
     await Promise.allSettled(['telegram', 'email'].filter(channel => !receipt[channel]).map(async channel => {
-      await notifications[channel](text, lead);
-      await db.prepare(`UPDATE lead_receipts SET ${channel}=1 WHERE id=?`).bind(lead.id).run();
+      try {
+        await notifications[channel](text, lead);
+        await db.prepare(`UPDATE lead_receipts SET ${channel}=1 WHERE id=?`).bind(lead.id).run();
+      } catch (reason) {
+        // Only diagnostic categories: never log recipient, message, or raw errors.
+        console.warn(JSON.stringify({
+          event: 'lead_delivery_failed',
+          channel,
+          code: /^[A-Z_0-9]+$/.test(reason?.code || '') ? reason.code : 'UNKNOWN',
+          smtpStatus: Number(reason?.responseCode) || null,
+          category: /spam|suspicious|policy/i.test(reason?.response || '') ? 'policy'
+            : /authentication|credentials|authorization/i.test(reason?.response || '') ? 'auth' : 'other',
+        }));
+      }
     }));
     const result = await db.prepare('SELECT telegram,email FROM lead_receipts WHERE id=?').bind(lead.id).first();
     return result.telegram && result.email
