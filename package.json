@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build && node scripts/prepare-sites-build.mjs",
     "build:cloudflare": "npm run build && node scripts/build-cloudflare.mjs",
+    "deploy:cloudflare": "npm run build:cloudflare && node scripts/deploy-cloudflare.mjs",
     "preview": "vite preview",
     "start": "node --env-file-if-exists=.env.local server/index.mjs",
     "test:leads": "node --test tests/leads.test.mjs",

@@ -3,8 +3,8 @@ import { fileURLToPath } from 'node:url';
 import { mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-// Pin the compiler used by both Git builds and direct previews. An advanced
-// mode Worker prevents Pages from rebuilding Functions with a different tool.
+// Build with the compiler used by the direct publication command. Pages Git
+// builds still run their own old final compiler, so do not use that pipeline.
 const compiler = fileURLToPath(new URL('../node_modules/wrangler/bin/wrangler.js', import.meta.url));
 mkdirSync('work', { recursive: true });
 const result = spawnSync(process.execPath, [
