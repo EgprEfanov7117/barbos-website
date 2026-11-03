@@ -9,10 +9,16 @@ const campaign = [
   ['Тёплый повод зайти', 'Какао и шоколадное печенье'],
 ];
 
-export function PortfolioCard({ onNavigate }) {
-  return <a className="portfolio-card" href="/projects/ryadom" onClick={onNavigate}>
-    <div className="portfolio-cover"><img src={asset(folder + 'landing-cover.jpg')} alt="Первый экран лендинга кофейни Рядом" loading="lazy" /></div>
-    <div className="portfolio-card-body"><div><span className="case-eyebrow">Кофейня по соседству · концепт</span><h3>Рядом</h3></div><p>Лендинг, сценарий бота и шесть рекламных материалов — в одной стилистике.</p><span className="portfolio-card-link">Смотреть проект <Arrow diagonal /></span></div>
+const portfolio = {
+  ryadom: { title: 'Рядом', label: 'Кофейня по соседству · концепт', description: 'Лендинг, сценарий бота и шесть рекламных материалов — в одной стилистике.', cover: folder + 'landing-cover.jpg', alt: 'Первый экран лендинга кофейни Рядом' },
+  povod: { title: 'Повод', label: 'Цветочная мастерская · концепт', description: 'Ключевой визуал, обложка и три информационных поста для Telegram.', cover: 'portfolio/povod/02-pinned-cover.png', alt: 'Обложка мастерской Повод: Букеты для ваших историй' },
+};
+
+export function PortfolioCard({ onNavigate, project = 'ryadom' }) {
+  const item = portfolio[project];
+  return <a className="portfolio-card" href={'/projects/' + project} onClick={onNavigate}>
+    <div className="portfolio-cover"><img src={asset(item.cover)} alt={item.alt} loading="lazy" /></div>
+    <div className="portfolio-card-body"><div><span className="case-eyebrow">{item.label}</span><h3>{item.title}</h3></div><p>{item.description}</p><span className="portfolio-card-link">Смотреть проект <Arrow diagonal /></span></div>
   </a>;
 }
 
@@ -27,7 +33,7 @@ export function CasePage({ back, onMedia }) {
     else return;
     event.preventDefault(); setFormat(next ? 'stories' : 'posts'); tabs.current[next]?.focus();
   }
-  return <article className="ryadom-case container">
+  return <article className="project-case ryadom-case container">
     <a className="case-back" href="/#concepts" onClick={back}><ArrowLeftIcon aria-hidden="true" size={17} />Портфолио</a>
     <header className="case-intro"><h1>Рядом</h1><div className="case-summary"><span className="case-eyebrow">Кофейня по соседству · концепт</span><p>Лендинг, сценарий бота<br className="case-desktop-break" /> и рекламные креативы.</p><a href="/demos/ryadom/" className="text-link">Смотреть лендинг <Arrow diagonal /></a></div></header>
     <Media name={folder + 'landing-cover.jpg'} alt="Лендинг кофейни Рядом: Загляните. Останьтесь." className="case-hero" onOpen={onMedia} />
