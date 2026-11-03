@@ -13,10 +13,11 @@ export function App() {
   const [selected, setSelected] = useState(null);
   const [telegramNotice, setTelegramNotice] = useState(false);
   const [contactRequest, setContactRequest] = useState(0);
+  const [contactDirection, setContactDirection] = useState(null);
   const nameRef = useRef(null);
   const page = path.replace(/\/$/, '') === '/projects/povod' ? 'povod' : path.replace(/\/$/, '') === '/projects/ryadom' ? 'ryadom' : path === '/development' ? 'development' : path === '/creative' ? 'creative' : 'home';
   useEffect(() => {
-    const pop = () => { setPath(window.location.pathname); setSelected(null); setMedia(null); setMenu(false); };
+    const pop = () => { setPath(window.location.pathname); setSelected(null); setContactDirection(null); setMedia(null); setMenu(false); };
     window.addEventListener('popstate', pop);
     return () => window.removeEventListener('popstate', pop);
   }, []);
@@ -26,7 +27,7 @@ export function App() {
   function navigate(url) {
     const [next, hash] = url.split('#');
     setMedia(null);
-    if (window.location.pathname !== next) { window.history.pushState({}, '', url); setPath(next); setSelected(null); }
+    if (window.location.pathname !== next) { window.history.pushState({}, '', url); setPath(next); setSelected(null); setContactDirection(null); }
     else if (hash) window.history.replaceState({}, '', url);
     setMenu(false);
     requestAnimationFrame(() => {
@@ -37,8 +38,10 @@ export function App() {
   const link = url => event => {
     if (!event.metaKey && !event.ctrlKey && !event.shiftKey && event.button === 0) { event.preventDefault(); navigate(url); }
   };
-  const contact = (service = null) => {
-    if (service?.id) setSelected(service);
+  const contact = (service = null, direction = null) => {
+    if (direction) setSelected(null);
+    else if (service?.id) setSelected(service);
+    setContactDirection(direction || service?.direction || null);
     setContactRequest(v => v + 1);
     setMenu(false);
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -59,7 +62,7 @@ export function App() {
     </header>
     <main id="main">
       {page === 'home' ? <Home key="page-home" navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} /> : page === 'ryadom' ? <CasePage back={link('/#concepts')} onMedia={setMedia} /> : page === 'povod' ? <PovodCase back={link('/#concepts')} onMedia={setMedia} contact={() => { const service = creative.find(item => item.id === 'design'); contact({ ...service, direction: 'creative', total: service.price, addon: null }); }} /> : <ServicePage key={'page-' + page} page={page} navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} />}
-      <Contact key={'contact-' + page} selected={selected} setSelected={setSelected} telegramNotice={telegramNotice} clearTelegram={() => setTelegramNotice(false)} nameRef={nameRef} requestId={contactRequest} title={page === 'home' ? 'project' : 'task'} onTelegram={telegram} />
+      <Contact key={'contact-' + page} selected={selected} setSelected={setSelected} telegramNotice={telegramNotice} clearTelegram={() => setTelegramNotice(false)} nameRef={nameRef} requestId={contactRequest} requestedDirection={contactDirection} title={page === 'home' ? 'project' : 'task'} onTelegram={telegram} />
     </main>
     <footer className="site-footer container"><a href="/" onClick={link('/')} className="wordmark">NOVARY</a><p>Разработка · Дизайн · AI-креативы</p><small>© 2026 NOVARY</small><button onClick={telegram} className="text-link">Написать в Telegram<Arrow diagonal /></button></footer>
     <Lightbox media={media} onClose={() => setMedia(null)} />
@@ -76,6 +79,16 @@ function Workflow({ navigate, contact }) {
   </div>;
 }
 
+function ProjectScope({ contact }) {
+  return <section className="project-scope container" id="formats" aria-label="Отдельная услуга или комплекс">
+    <div className="scope-intro"><h2>Одна услуга<br />или комплекс.</h2><p>Начнём с задачи бизнеса. Можно заказать один результат или объединить несколько услуг.</p></div>
+    <div className="scope-options">
+      <div className="scope-option"><h3>Нужна одна услуга</h3><p>Например, лендинг для нового предложения или обложка для публикации. Состав, цена и предварительный срок — в каталоге услуг.</p></div>
+      <div className="scope-option"><h3>Нужно несколько услуг</h3><p>Например, лендинг и рекламный комплект для запуска. Или сайт и сценарный Telegram-бот для вопросов и заявок.</p><p>Состав, стоимость и сроки комплекса согласуем под вашу задачу.</p><button className="text-link" onClick={() => contact(null, 'complex')}>Обсудить комплекс<Arrow diagonal /></button></div>
+    </div>
+  </section>;
+}
+
 function Home({ navigate, contact, telegram, onMedia }) {
   return <>
     <section className="home-hero container">
@@ -86,6 +99,7 @@ function Home({ navigate, contact, telegram, onMedia }) {
       <a href="/development" onClick={e => { e.preventDefault(); navigate('/development'); }}><div><h2>Разработка</h2><p>Сайты · Лендинги · Telegram-боты</p></div><img src={asset('coffee-landing.png')} alt="" /><Arrow /></a>
       <a href="/creative" onClick={e => { e.preventDefault(); navigate('/creative'); }}><div><h2>Дизайн и креативы</h2><p>Рекламные макеты · AI-изображения · AI-видео</p></div><img src={asset('coffee-photo.png')} alt="" /><Arrow /></a>
     </section>
+    <ProjectScope contact={contact} />
     <section className="home-concept container" id="concepts">
       <div className="concept-heading"><h2>Проекты<br />NOVARY.</h2><p>Разработка и креативы в проектах для бизнеса.<br />Демонстрационные концепты.</p></div>
       {['ryadom', 'povod'].map(project => <PortfolioCard key={project} project={project} onNavigate={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && event.button === 0) { event.preventDefault(); navigate('/projects/' + project); } }} />)}
@@ -119,5 +133,6 @@ function ServicePage({ page, navigate, contact, telegram, onMedia }) {
       </section>}
     </div>
     <ServiceSelector services={isDev ? development : creative} initial={isDev ? 'site' : 'ads'} direction={page} choose={contact} onMedia={onMedia} />
+    <ProjectScope contact={contact} />
   </>;
 }

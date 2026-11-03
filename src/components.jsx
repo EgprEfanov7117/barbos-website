@@ -99,6 +99,7 @@ export function ServiceSelector({ services, initial, direction, choose, onMedia 
   const total = current.price === null ? null : current.price + (current.addon === 'voice' && addon ? 2000 : 0);
   return <section className="services-section container" id="services">
     <h2 className="selector-heading">Выбери своё решение</h2>
+    <p className="selector-intro">Выберите услугу — посмотрите, для какой задачи она подходит и что входит в стоимость.</p>
     <div className="service-selector">
       <div className="service-tabs" role="tablist" aria-label="Услуги" aria-orientation="vertical">
         {services.map((service, i) => <button key={service.id} role="tab" ref={el => refs.current[i] = el} id={'tab-' + service.id} aria-controls="service-details" aria-selected={activeId === service.id} tabIndex={activeId === service.id ? 0 : -1} className={'service-tab ' + (activeId === service.id ? 'active' : '')} onKeyDown={e => keyboard(e, i)} onClick={() => pick(service.id)}>
@@ -106,7 +107,8 @@ export function ServiceSelector({ services, initial, direction, choose, onMedia 
         </button>)}
       </div>
       <div className="service-details" role="tabpanel" id="service-details" aria-labelledby={'tab-' + current.id} key={current.id}>
-        <div className="service-copy"><h3>{current.name}</h3><p className="service-result">{current.result}</p><ul>{current.scope.map(item => <li key={item}>{item}</li>)}</ul>
+        <div className="service-copy"><h3>{current.name}</h3><p className="service-result">{current.result}</p><p className="service-fit"><strong>Подойдёт, если</strong> {current.fit}</p><ul>{current.scope.map(item => <li key={item}>{item}</li>)}</ul>
+          {current.caseStudy && <a className="text-link service-case-link" href={current.caseStudy.href}>Посмотреть концепт «{current.caseStudy.name}»<Arrow diagonal /></a>}
           <div className="service-cost"><strong>{total === null ? 'После оценки задачи' : money(total)}</strong><span>{current.time}</span>{current.addon === 'voice' && addon && <small>15 000 ₽ + AI-озвучка 2 000 ₽</small>}</div>
           <button className="button button-outline" onClick={() => choose({ ...current, direction, addon: addon ? current.addon : null, total })}>{current.id === 'updates' ? 'Описать задачу' : 'Обсудить проект'}<Arrow diagonal /></button>
         </div>
@@ -120,7 +122,7 @@ export function ServiceSelector({ services, initial, direction, choose, onMedia 
   </section>;
 }
 
-export function Contact({ selected, setSelected, telegramNotice, clearTelegram, nameRef, requestId, title, onTelegram }) {
+export function Contact({ selected, setSelected, telegramNotice, clearTelegram, nameRef, requestId, requestedDirection, title, onTelegram }) {
   const [mode, setMode] = useState('complex');
   const [values, setValues] = useState({ name: '', contact: '', task: '' });
   const [errors, setErrors] = useState({});
@@ -132,6 +134,7 @@ export function Contact({ selected, setSelected, telegramNotice, clearTelegram, 
   const [website, setWebsite] = useState('');
   useEffect(() => { pendingRequest.current?.abort(); pendingRequest.current = null; setStatus('form'); setCopied(false); setErrors({}); setSendError(''); }, [requestId]);
   useEffect(() => () => pendingRequest.current?.abort(), []);
+  useEffect(() => { if (requestedDirection) setMode(requestedDirection); }, [requestId, requestedDirection]);
   useEffect(() => { if (selected) { pendingRequest.current?.abort(); pendingRequest.current = null; setMode(selected.direction); setStatus('form'); setSendError(''); } }, [selected]);
   const change = e => { setValues(v => ({ ...v, [e.target.name]: e.target.value })); setErrors(v => ({ ...v, [e.target.name]: '' })); setCopied(false); };
   const summary = selected ? [
@@ -193,8 +196,10 @@ export function Contact({ selected, setSelected, telegramNotice, clearTelegram, 
         <label className="form-trap" aria-hidden="true">Сайт компании<input name="website" value={website} onChange={e => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" /></label>
         {selected && <div className="chosen-package"><span>Выбрано: {summary}</span><button type="button" disabled={status === 'sending'} className="icon-button" onClick={() => setSelected(null)} aria-label="Убрать выбранный пакет"><XIcon /></button></div>}
         <div className="form-row"><label className="input-label"><span className="sr-only">Имя</span><input disabled={status === 'sending'} maxLength={120} id="contact-name" ref={nameRef} name="name" autoComplete="given-name" placeholder="Имя" value={values.name} onChange={change} aria-invalid={!!errors.name} aria-describedby={errors.name ? 'error-name' : undefined} />{errors.name && <span id="error-name" className="field-error">{errors.name}</span>}</label><label className="input-label"><span className="sr-only">Telegram или email</span><input disabled={status === 'sending'} maxLength={160} id="contact-address" name="contact" autoComplete="email" placeholder="Telegram или email" value={values.contact} onChange={change} aria-invalid={!!errors.contact} aria-describedby={errors.contact ? 'error-contact' : undefined} />{errors.contact && <span id="error-contact" className="field-error">{errors.contact}</span>}</label></div>
-        <label className="input-label"><span className="sr-only">Что нужно сделать?</span><textarea disabled={status === 'sending'} maxLength={1800} name="task" rows={3} placeholder="Что нужно сделать?" value={values.task} onChange={change} /></label>
+        <label className="input-label"><span className="sr-only">Что нужно сделать?</span><textarea disabled={status === 'sending'} maxLength={1800} name="task" rows={3} placeholder="Что нужно сделать?" aria-describedby="task-hint" value={values.task} onChange={change} /></label>
+        <p className="task-hint" id="task-hint">Расскажите о бизнесе и задаче. Если пока не знаете, какие услуги нужны, поможем определить состав.</p>
         <fieldset><legend>Интересует</legend><div className="direction-options">{[['development', 'Разработка'], ['creative', 'Дизайн и креативы'], ['complex', 'Комплекс']].map(([id, text]) => <label key={id}><span className="checkbox-wrap"><input disabled={status === 'sending'} type="radio" name="direction" value={id} checked={mode === id} onChange={() => { setMode(id); if (selected && selected.direction !== id) setSelected(null); }} /><CheckIcon /></span>{text}</label>)}</div></fieldset>
+        {mode === 'complex' && <p className="complex-hint">Комплекс — несколько услуг для одной задачи. Состав, стоимость и сроки согласуем после обсуждения.</p>}
         <div className="form-actions"><button className="button button-orange" disabled={status === 'sending'}>{status === 'sending' ? 'Отправляем…' : status === 'error' ? 'Повторить отправку' : 'Обсудить проект'}<Arrow diagonal /></button><button type="button" className="text-link contact-telegram" onClick={onTelegram}>Написать в Telegram</button><span className="demo-label">Отправляя заявку, вы передаёте нам контакт для ответа.</span></div>
       </form>}
     </div>
