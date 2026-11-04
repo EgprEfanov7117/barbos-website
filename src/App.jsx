@@ -118,7 +118,7 @@ function ServicePage({ page, navigate, contact, telegram, onMedia }) {
         <div className="breadcrumb"><a href="/" onClick={e => { e.preventDefault(); navigate('/'); }}>Главная</a><span>/</span><span>{isDev ? 'Разработка' : 'Дизайн и креативы'}</span></div>
         <h1>{isDev ? <>Разработка.<br />Под задачу <span>бизнеса.</span></> : <>Дизайн<br />и <span>креативы.</span></>}</h1>
         <p>{isDev ? 'Сайты и Telegram-боты: от содержания и сценария до запуска и проверки.' : 'Визуальные материалы для рекламы, сайтов и соцсетей.'}</p>
-        <div className="hero-actions"><button className="button button-orange" onClick={() => contact()}>Обсудить проект<Arrow diagonal /></button><button className="text-link" onClick={telegram}>Написать в Telegram</button></div>
+        <div className="hero-actions"><button className="button button-orange" onClick={() => contact()}>Обсудить проект<Arrow diagonal /></button><a className="text-link" href="#services">Услуги и цены<Arrow /></a></div>
       </section>
       {isDev ? <section className="development-concept container">
         <div className="concept-heading"><h2>От экрана<br /><span>к заявке.</span></h2><p>Пример лендинга и Telegram-бота<br />по заданному сценарию.</p></div>
