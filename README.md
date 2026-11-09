@@ -66,3 +66,6 @@ Address migration 2026-11-09: main public URL and direct deployment target are h
 
 
 Telegram migration 2026-11-09: public contact buttons open https://t.me/barbos_studio_bot/. Website notifications use the new bot through server-only bindings. The legacy bot and its support database remain separate for existing conversations. Never commit either bot token.
+
+
+Mail migration 2026-11-09: notification sender, recipient and SMTP authentication now use the new BARBOS mailbox through server-only runtime bindings. SMTP authentication with certificate validation passed. Previous mailbox configuration is preserved privately for recovery. No application-password value or private notification address belongs in this repository. Both the primary and legacy Pages deployments must be refreshed after runtime-setting changes.
