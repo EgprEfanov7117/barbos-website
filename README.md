@@ -4,7 +4,7 @@
 
 ## Публикация
 
-Существующий проект Cloudflare Pages: `novary`, https://novary.pages.dev/. Репозиторий: `EgprEfanov7117/novary-website`, production-ветка `main`. Команда сборки — `npm run build:cloudflare`, публичный каталог — `dist/client`. Настройки платформы и D1-привязка — `wrangler.jsonc`.
+Существующий проект Cloudflare Pages: `novary`, https://novary.pages.dev/. Репозиторий: `EgprEfanov7117/barbos-website`, production-ветка `main`. Команда сборки — `npm run build:cloudflare`, публичный каталог — `dist/client`. Настройки платформы и D1-привязка — `wrangler.jsonc`.
 
 Версия Wrangler закреплена в зависимостях. `scripts/build-cloudflare.mjs` заранее собирает Functions в `dist/client/_worker.js/` (Pages advanced mode). Публиковать нужно через Wrangler 4.154.0 из проекта: встроенная Git-сборка Pages использует Wrangler 3.114.17 и повторно обрабатывает Worker несовместимым способом. Установка современного Wrangler в зависимостях не меняет встроенный финальный этап Cloudflare. Каталог Worker не является публичной статикой.
 
