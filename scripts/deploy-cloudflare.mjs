@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 mkdirSync('work', { recursive: true });
 const compiler = fileURLToPath(new URL('../node_modules/wrangler/bin/wrangler.js', import.meta.url));
 const result = spawnSync(process.execPath, [
-  compiler, 'pages', 'deploy', 'dist/client', '--project-name', 'novary',
+  compiler, 'pages', 'deploy', 'dist/client', '--project-name', process.env.CLOUDFLARE_PAGES_PROJECT || 'barbos',
   '--branch', 'main', '--commit-dirty=true', '--env-file', '/dev/null',
 ], {
   stdio: 'inherit',

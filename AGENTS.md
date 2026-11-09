@@ -18,3 +18,6 @@ Services publication completed: production deployment e06a0fd7-198d-4e37-aee3-36
 
 
 Rebrand 2026-11-09: user renamed NOVARY to BARBOS and authorized updating all accessible surfaces. Public copy, metadata and notification branding use BARBOS. Preserve existing technical URLs and resource identities until a verified migration is available. Do not develop a new concept yet.
+
+
+Address migration 2026-11-09: main public URL and direct deployment target are https://barbos.pages.dev/ (Pages project barbos). The existing notification recipients and D1 database are retained. The legacy novary.pages.dev project redirects GET/HEAD page visits to the new host with path/query preserved; API POST requests still run normally. Deploy the new project first and verify it before deploying the same build to the legacy project with CLOUDFLARE_PAGES_PROJECT=novary. Continue using pinned Wrangler 4.154.0.

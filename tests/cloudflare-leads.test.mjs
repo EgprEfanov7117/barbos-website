@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { handleCloudflareLead } from '../cloudflare/leads.mjs';
+import { onRequest } from '../functions/_middleware.js';
 
 function setup() {
   const sqlite = new DatabaseSync(':memory:');
@@ -13,6 +14,24 @@ function setup() {
 }
 const data = () => ({ requestId: randomUUID(), name: 'Тест', contact: '@barbos_test', task: 'Проверка', direction: 'creative', serviceId: 'video', addon: 'voice' });
 const request = (body, headers = {}, url = 'https://novary.pages.dev/api/leads') => new Request(url, { method: 'POST', headers: { origin: new URL(url).origin, 'content-type': 'application/json', 'CF-Connecting-IP': '192.0.2.1', ...headers }, body: JSON.stringify(body) });
+
+test('BARBOS form accepts the new host and preview but rejects unrelated hosts', async () => {
+  const { env, context } = setup();
+  const channels = { configured: true, telegram: async () => {}, email: async () => {} };
+  for (const host of ['barbos.pages.dev', 'preview.barbos.pages.dev']) {
+    assert.equal((await handleCloudflareLead(request(data(), {}, `https://${host}/api/leads`), env, context, channels)).status, 200);
+  }
+  assert.equal((await handleCloudflareLead(request(data(), {}, 'https://barbos.pages.dev.example.com/api/leads'), env, context, channels)).status, 403);
+});
+
+test('legacy pages redirect with their path and query while new pages and existing forms continue', async () => {
+  const next = () => new Response('continue');
+  const redirect = onRequest({ request: new Request('https://novary.pages.dev/projects/povod?from=old'), next });
+  assert.equal(redirect.status, 301);
+  assert.equal(redirect.headers.get('location'), 'https://barbos.pages.dev/projects/povod?from=old');
+  assert.equal(onRequest({ request: new Request('https://barbos.pages.dev/creative'), next }).status, 200);
+  assert.equal(onRequest({ request: request(data()), next }).status, 200);
+});
 
 test('Cloudflare receipts survive handler instances and retry only failed transport', async () => {
   const { env, context } = setup();

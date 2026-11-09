@@ -12,7 +12,7 @@ export async function handleCloudflareLead(request, env, context, notifications 
 })) {
   if (request.method !== 'POST') return error(405, 'Метод не поддерживается.');
   const url = new URL(request.url);
-  const trustedHost = url.hostname === 'novary.pages.dev' || url.hostname.endsWith('.novary.pages.dev') || ['localhost', '127.0.0.1'].includes(url.hostname);
+  const trustedHost = url.hostname === 'barbos.pages.dev' || url.hostname.endsWith('.barbos.pages.dev') || url.hostname === 'novary.pages.dev' || url.hostname.endsWith('.novary.pages.dev') || ['localhost', '127.0.0.1'].includes(url.hostname);
   if (!trustedHost || request.headers.get('origin') !== url.origin) return error(403, 'Отправьте заявку через форму сайта.');
   if (!request.headers.get('content-type')?.startsWith('application/json')) return error(415, 'Неверный формат запроса.');
   let input, lead;

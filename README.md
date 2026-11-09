@@ -60,3 +60,6 @@ npm run build
 Перед заменой сохранена метка исходников `novary-before-refresh-20261102` (коммит 397679205eabf6c7fcce12a5635db127f943f944). Предыдущая production-версия Cloudflare: `057cbd7d-e022-451d-9c11-d917d38e3695`, https://057cbd7d.novary.pages.dev/. Откат опубликованных файлов выполняется через историю Cloudflare Pages. Старые адреса services/projects/about/contact перенаправляются в новую структуру.
 
 Шаблон `worker/` и упаковка Sites сохранены для совместимости; публикация через Cloudflare Pages использует `functions/`, а не этот шаблонный Worker.
+
+
+Address migration 2026-11-09: main public URL and direct deployment target are https://barbos.pages.dev/ (Pages project barbos). The existing notification recipients and D1 database are retained. The legacy novary.pages.dev project redirects GET/HEAD page visits to the new host with path/query preserved; API POST requests still run normally. Deploy the new project first and verify it before deploying the same build to the legacy project with CLOUDFLARE_PAGES_PROJECT=novary. Continue using pinned Wrangler 4.154.0.
