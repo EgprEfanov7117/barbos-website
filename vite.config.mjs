@@ -17,7 +17,7 @@ export default defineConfig({
     },
   },
   plugins: [react(), {
-    name: 'novary-leads',
+    name: 'barbos-leads',
     configureServer(server) {
       server.middlewares.use(createLeadMiddleware({ ...loadEnv(server.config.mode, server.config.envDir, ''), ...process.env }));
     },

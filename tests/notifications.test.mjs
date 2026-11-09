@@ -9,7 +9,7 @@ const env = {
   SMTP_HOST: 'smtp.example.com', SMTP_USER: 'test', SMTP_PASSWORD: 'test',
   LEAD_EMAIL_FROM: 'from@example.com', LEAD_EMAIL_TO: 'to@example.com',
 };
-const lead = { id: '12345678-test', contact: '@novary_test' };
+const lead = { id: '12345678-test', contact: '@barbos_test' };
 
 test('SMTP transport retains provider identity and requires recipient acceptance', async () => {
   let accepted = ['to@example.com'];

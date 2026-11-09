@@ -11,7 +11,7 @@ function setup() {
   const LEADS_DB = { prepare(sql) { return { bind(...params) { return { async run() { const r = sqlite.prepare(sql).run(...params); return { meta: { changes: Number(r.changes) } }; }, async first() { return sqlite.prepare(sql).get(...params) || null; } }; } }; } };
   return { env: { LEADS_DB, TELEGRAM_BOT_TOKEN: 'test-only-salt' }, context: { waitUntil(promise) { promise.catch(() => {}); } } };
 }
-const data = () => ({ requestId: randomUUID(), name: 'Тест', contact: '@novary_test', task: 'Проверка', direction: 'creative', serviceId: 'video', addon: 'voice' });
+const data = () => ({ requestId: randomUUID(), name: 'Тест', contact: '@barbos_test', task: 'Проверка', direction: 'creative', serviceId: 'video', addon: 'voice' });
 const request = (body, headers = {}, url = 'https://novary.pages.dev/api/leads') => new Request(url, { method: 'POST', headers: { origin: new URL(url).origin, 'content-type': 'application/json', 'CF-Connecting-IP': '192.0.2.1', ...headers }, body: JSON.stringify(body) });
 
 test('Cloudflare receipts survive handler instances and retry only failed transport', async () => {

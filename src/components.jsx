@@ -184,7 +184,7 @@ export function Contact({ selected, setSelected, telegramNotice, clearTelegram, 
     }
   };
   const copy = async () => {
-    const content = `NOVARY — заявка\nИмя: ${values.name}\nКонтакт: ${values.contact}\nНаправление: ${mode === 'development' ? 'Разработка' : mode === 'creative' ? 'Дизайн и креативы' : 'Комплекс'}\n${summary}\nЗадача: ${values.task || 'Обсудить на встрече'}`;
+    const content = `BARBOS — заявка\nИмя: ${values.name}\nКонтакт: ${values.contact}\nНаправление: ${mode === 'development' ? 'Разработка' : mode === 'creative' ? 'Дизайн и креативы' : 'Комплекс'}\n${summary}\nЗадача: ${values.task || 'Обсудить на встрече'}`;
     try { await navigator.clipboard.writeText(content); setCopied(true); } catch { setCopied(false); }
   };
   return <section className="contact-section container" id="contact">

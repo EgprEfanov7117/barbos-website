@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 import { createLeadHandler, formatLead, validateLead } from '../server/leads.mjs';
 
-const input = (changes = {}) => ({ requestId: randomUUID(), name: 'Тест NOVARY', contact: '@novary_test', task: 'Проверка заявки', direction: 'creative', serviceId: 'video', addon: 'voice', ...changes });
+const input = (changes = {}) => ({ requestId: randomUUID(), name: 'Тест BARBOS', contact: '@barbos_test', task: 'Проверка заявки', direction: 'creative', serviceId: 'video', addon: 'voice', ...changes });
 const channels = (changes = {}) => ({ configured: true, telegram: async () => {}, email: async () => {}, ...changes });
 
 test('server derives the price and add-on from the catalog, ignoring client quote', () => {

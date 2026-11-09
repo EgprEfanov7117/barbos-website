@@ -22,7 +22,7 @@ export function App() {
     return () => window.removeEventListener('popstate', pop);
   }, []);
   useEffect(() => {
-    document.title = page === 'povod' ? 'Повод — кейс NOVARY' : page === 'ryadom' ? 'Рядом — кейс NOVARY' : page === 'home' ? 'NOVARY — идеи в дело' : page === 'development' ? 'Разработка — NOVARY' : 'Дизайн и креативы — NOVARY';
+    document.title = page === 'povod' ? 'Повод — кейс BARBOS' : page === 'ryadom' ? 'Рядом — кейс BARBOS' : page === 'home' ? 'BARBOS — идеи в дело' : page === 'development' ? 'Разработка — BARBOS' : 'Дизайн и креативы — BARBOS';
   }, [page]);
   function navigate(url) {
     const [next, hash] = url.split('#');
@@ -51,7 +51,7 @@ export function App() {
   return <>
     <a className="skip-link" href="#main">К содержанию</a>
     <header className="site-header container">
-      <a href="/" onClick={link('/')} className="wordmark" aria-label="NOVARY — главная">NOVARY</a>
+      <a href="/" onClick={link('/')} className="wordmark" aria-label="BARBOS — главная">BARBOS</a>
       <nav className={menu ? 'main-nav open' : 'main-nav'} aria-label="Основная навигация">
         <a href="/development" onClick={link('/development')} className={page === 'development' ? 'current' : ''} aria-current={page === 'development' ? 'page' : undefined}>Разработка</a>
         <a href="/creative" onClick={link('/creative')} className={page === 'creative' ? 'current' : ''} aria-current={page === 'creative' ? 'page' : undefined}>Дизайн и креативы</a>
@@ -64,7 +64,7 @@ export function App() {
       {page === 'home' ? <Home key="page-home" navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} /> : page === 'ryadom' ? <CasePage back={link('/#concepts')} onMedia={setMedia} /> : page === 'povod' ? <PovodCase back={link('/#concepts')} onMedia={setMedia} contact={() => { const service = creative.find(item => item.id === 'design'); contact({ ...service, direction: 'creative', total: service.price, addon: null }); }} /> : <ServicePage key={'page-' + page} page={page} navigate={navigate} contact={contact} telegram={telegram} onMedia={setMedia} />}
       <Contact key={'contact-' + page} selected={selected} setSelected={setSelected} telegramNotice={telegramNotice} clearTelegram={() => setTelegramNotice(false)} nameRef={nameRef} requestId={contactRequest} requestedDirection={contactDirection} title={page === 'home' ? 'project' : 'task'} onTelegram={telegram} />
     </main>
-    <footer className="site-footer container"><a href="/" onClick={link('/')} className="wordmark">NOVARY</a><p>Разработка · Дизайн · AI-креативы</p><small>© 2026 NOVARY</small><button onClick={telegram} className="text-link">Написать в Telegram<Arrow diagonal /></button></footer>
+    <footer className="site-footer container"><a href="/" onClick={link('/')} className="wordmark">BARBOS</a><p>Разработка · Дизайн · AI-креативы</p><small>© 2026 BARBOS</small><button onClick={telegram} className="text-link">Написать в Telegram<Arrow diagonal /></button></footer>
     <Lightbox media={media} onClose={() => setMedia(null)} />
   </>;
 }
@@ -95,13 +95,13 @@ function Home({ navigate, contact, telegram, onMedia }) {
       <div className="hero-copy"><h1>Идеи —<br />в <span>дело.</span></h1><p>Разрабатываем сайты и ботов.<br />Создаём дизайн и AI-контент для бизнеса.</p><div className="hero-actions"><button className="button button-orange" onClick={() => contact()}>Обсудить проект<Arrow diagonal /></button><button className="text-link" onClick={telegram}>Написать в Telegram</button></div></div>
       <Workflow navigate={navigate} contact={contact} />
     </section>
-    <section className="directions container" aria-label="Направления NOVARY">
+    <section className="directions container" aria-label="Направления BARBOS">
       <a href="/development" onClick={e => { e.preventDefault(); navigate('/development'); }}><div><h2>Разработка</h2><p>Сайты · Лендинги · Telegram-боты</p></div><img src={asset('coffee-landing.png')} alt="" /><Arrow /></a>
       <a href="/creative" onClick={e => { e.preventDefault(); navigate('/creative'); }}><div><h2>Дизайн и креативы</h2><p>Рекламные макеты · AI-изображения · AI-видео</p></div><img src={asset('coffee-photo.png')} alt="" /><Arrow /></a>
     </section>
     <ProjectScope contact={contact} />
     <section className="home-concept container" id="concepts">
-      <div className="concept-heading"><h2>Проекты<br />NOVARY.</h2><p>Разработка и креативы в проектах для бизнеса.<br />Демонстрационные концепты.</p></div>
+      <div className="concept-heading"><h2>Проекты<br />BARBOS.</h2><p>Разработка и креативы в проектах для бизнеса.<br />Демонстрационные концепты.</p></div>
       {['ryadom', 'povod'].map(project => <PortfolioCard key={project} project={project} onNavigate={event => { if (!event.metaKey && !event.ctrlKey && !event.shiftKey && event.button === 0) { event.preventDefault(); navigate('/projects/' + project); } }} />)}
     </section>
     <section className="manifesto" id="approach"><div className="container"><div className="manifesto-grid"><h2><Scramble text="Ясно." /><Scramble text="Смело." /><Scramble text="По делу." /></h2><div className="principles"><button><Scramble text="Понятный процесс" /></button><button><Scramble text="Цельный визуальный стиль" /></button><button><Scramble text="Технологии под задачу" /></button></div></div><p>Сначала задача. Затем решение.</p></div></section>

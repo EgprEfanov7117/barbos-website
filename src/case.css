@@ -1,4 +1,4 @@
-/* Editorial portfolio extension, using the established NOVARY tokens. */
+/* Editorial portfolio extension, using the established BARBOS tokens. */
 .portfolio-card{display:block;margin-top:44px;border-bottom:1px solid var(--line)}
 .portfolio-cover{overflow:hidden;background:#e9dfcc}
 .portfolio-cover img{width:100%;height:auto;transition:transform .45s}

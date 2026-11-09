@@ -27,8 +27,8 @@ export function createNotifications(env, { getSocket, createTransport = nodemail
         ...(getSocket ? { getSocket } : {}),
       });
       const result = await mail.sendMail({
-        from: { name: 'NOVARY', address: env.LEAD_EMAIL_FROM }, to: env.LEAD_EMAIL_TO,
-        subject: `NOVARY — новая заявка ${lead.id.slice(0, 8)}`,
+        from: { name: 'BARBOS', address: env.LEAD_EMAIL_FROM }, to: env.LEAD_EMAIL_TO,
+        subject: `BARBOS — новая заявка ${lead.id.slice(0, 8)}`,
         text, ...(lead.contact.includes('@') && !lead.contact.startsWith('@') ? { replyTo: lead.contact } : {}),
       });
       if (!result.accepted?.some(address => address.toLowerCase() === env.LEAD_EMAIL_TO.toLowerCase())) {

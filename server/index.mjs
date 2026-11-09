@@ -22,4 +22,4 @@ createServer((req, res) => api(req, res, async () => {
     res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
     if (req.method === 'HEAD') res.end(); else createReadStream(file).on('error', () => res.destroy()).pipe(res);
   } catch { res.writeHead(404).end(); }
-})).listen(Number(process.env.PORT || 4173), process.env.HOST || '127.0.0.1', () => console.log('NOVARY server is ready.'));
+})).listen(Number(process.env.PORT || 4173), process.env.HOST || '127.0.0.1', () => console.log('BARBOS server is ready.'));

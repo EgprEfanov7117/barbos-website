@@ -32,7 +32,7 @@ export function formatLead(lead) {
   const service = allServices.find(item => item.id === lead.serviceId);
   const quote = service ? `${service.name} — ${lead.total === null ? 'после оценки' : money(lead.total)}` : 'Индивидуальная задача';
   return [
-    'NOVARY — новая заявка', `Номер: ${lead.id}`, `Имя: ${lead.name}`, `Контакт: ${lead.contact}`,
+    'BARBOS — новая заявка', `Номер: ${lead.id}`, `Имя: ${lead.name}`, `Контакт: ${lead.contact}`,
     `Направление: ${directions[lead.direction]}`, `Услуга: ${quote}`,
     lead.addon === 'cms' ? 'Самостоятельное редактирование: отдельный индивидуальный расчёт' : lead.addon === 'voice' ? 'AI-озвучка включена в сумму (+2 000 ₽)' : '',
     `Задача: ${lead.task || 'Обсудить при контакте'}`,
