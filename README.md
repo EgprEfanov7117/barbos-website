@@ -63,3 +63,6 @@ npm run build
 
 
 Address migration 2026-11-09: main public URL and direct deployment target are https://barbos.pages.dev/ (Pages project barbos). The existing notification recipients and D1 database are retained. The legacy novary.pages.dev project redirects GET/HEAD page visits to the new host with path/query preserved; API POST requests still run normally. Deploy the new project first and verify it before deploying the same build to the legacy project with CLOUDFLARE_PAGES_PROJECT=novary. Continue using pinned Wrangler 4.154.0.
+
+
+Telegram migration 2026-11-09: public contact buttons open https://t.me/barbos_studio_bot/. Website notifications use the new bot through server-only bindings. The legacy bot and its support database remain separate for existing conversations. Never commit either bot token.

@@ -47,7 +47,7 @@ export function App() {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     setTimeout(() => nameRef.current?.focus({ preventScroll: true }), 400);
   };
-  const telegram = () => { setTelegramNotice(true); contact(); };
+  const telegram = () => { window.open('https://t.me/barbos_studio_bot', '_blank', 'noopener,noreferrer'); };
   return <>
     <a className="skip-link" href="#main">К содержанию</a>
     <header className="site-header container">
